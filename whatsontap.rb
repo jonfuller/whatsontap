@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'sinatra'
+require 'json'
 
 @@breweries = {sunking: -> {get_sunking_beers},
                bier: -> {get_bier_beers},
@@ -8,6 +9,18 @@ require 'sinatra'
 
 get '/' do
   @@breweries.map {|brewery, getter| show_beers(brewery, getter.call)}
+end
+
+get '/api' do
+  @@breweries.map {|brewery, getter| {name: brewery, beers: getter.call}}.to_json
+end
+
+get '/api/:name' do |brewery|
+  getter = @@breweries[brewery.downcase.to_sym]
+
+  return 404 unless getter
+
+  getter.call.to_json
 end
 
 get '/:brewery' do |brewery|
