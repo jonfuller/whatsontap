@@ -3,7 +3,8 @@ require 'bundler/setup'
 require 'sinatra'
 
 @@breweries = {sunking: -> {get_sunking_beers},
-               bier: -> {get_bier_beers}}
+               bier: -> {get_bier_beers},
+               flat12: -> {get_flat12_beers}}
 
 get '/' do
   @@breweries.map {|brewery, getter| show_beers(brewery, getter.call)}
@@ -64,4 +65,10 @@ def get_bier_beers
   bier_candidates = bier_candidates.take_while{|s| !(s.to_s.strip =~ /BIER around town.../)}
   bier_candidates = bier_candidates.drop(1)
   bier_candidates.map{|b| b.to_s.strip}.select{|b| b.length > 0}
+end
+
+def get_flat12_beers
+  require 'hpricot'
+  require 'open-uri'
+  Hpricot(open("http://flat12.me/blog/classification/ontap/feed/")).search("//item/title/")
 end
