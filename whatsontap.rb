@@ -46,7 +46,11 @@ def get_sunking_beers
   main_page = age_page.forms.first.submit(age_page.forms.first.submits[1])
   ontap = main_page.search(".ontap")
   
-  beers = ontap.text.split("\n").map{|s| s.strip}.select{|s| s.length > 0}.drop(2).map{|s| s.gsub('Seasonal Beer', '')}
+  beers = ontap.text.split("\n")
+    .map{|s| s.strip}
+    .select{|s| s.length > 0}
+    .drop(2)
+    .map{|s| s.gsub('Seasonal Beer', '')}
 end
 
 def get_bier_beers
