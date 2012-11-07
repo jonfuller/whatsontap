@@ -5,6 +5,7 @@ require 'json'
 
 @@breweries = {sunking: -> {get_sunking_beers},
                bier: -> {get_bier_beers},
+               triton: -> {get_triton_beers},
                flat12: -> {get_flat12_beers}}
 
 get '/' do
@@ -84,4 +85,15 @@ def get_flat12_beers
   require 'hpricot'
   require 'open-uri'
   Hpricot(open("http://flat12.me/blog/classification/ontap/feed/")).search("//item/title/")
+end
+
+def get_triton_beers
+  require 'hpricot'
+  require 'open-uri'
+  Hpricot(open("http://tritonbrewing.com/tap-room"))
+    .search("#text-3")
+    .search("font[@color=#333333]")
+    .map{|e| e.to_plain_text}.first.split("\r\n")
+    .map{|s| s.strip.gsub("\n", ' ')}
+    .select{|s| s.length > 0}
 end
