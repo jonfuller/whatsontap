@@ -77,9 +77,9 @@ def get_bier_beers
   "sixteenth", "seventeenth", "eighteenth", "ninteteenth", "twentieth", "twenty-?first", "twenty-?second", "twenty-?third", "twenty-?fourth", "twenty-?fifth", "twenty-?sixth",
   "twenty-?seventh", "twenty-?eighth", "twenty-?nineth", "thirtieth", "thirty-?first"]
   date_regex = "(Jan(uary)?|Feb(r?uary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sept?(ember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?) ([0-9]+(th|nd|st|rd)?|#{ordinals.join("|")})"
-  bier_regex = /((Biers|Beers) Releases for #{date_regex})|#{date_regex} (biers|beers)/i
+  bier_regex = /((Biers|Beers|Bier) Releases for #{date_regex})|#{date_regex} (biers|beers)/i
   this_week_start = bier_candidates.select { |nd| nd.to_s =~ bier_regex}.first
-  bier_candidates = bier_candidates.drop_while{|s| !(s.to_s.strip =~ /BIER Releases for October 31st:/)}
+  bier_candidates = bier_candidates.drop_while{|s| !(s.to_s.strip =~ bier_regex)}
   bier_candidates = bier_candidates.take_while{|s| !(s.to_s.strip =~ /BIER around town.../)}
   bier_candidates = bier_candidates.drop(1)
   bier_candidates.map{|b| b.to_s.strip}.select{|b| b.length > 0}
