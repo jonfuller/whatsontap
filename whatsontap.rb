@@ -6,6 +6,7 @@ require 'json'
 @@breweries = {sunking: -> {get_sunking_beers},
                bier: -> {get_bier_beers},
                triton: -> {get_triton_beers},
+               fountain_square: -> {get_fountain_square_beers},
                flat12: -> {get_flat12_beers}}
 
 get '/' do
@@ -100,4 +101,13 @@ def get_triton_beers
     .map{|e| e.to_plain_text}.first.split("\r\n")
     .map{|s| s.strip.gsub("\n", ' ')}
     .select{|s| s.length > 0}
+end
+
+def get_fountain_square_beers
+  require 'hpricot'
+  require 'open-uri'
+  Hpricot(open("http://www.fountainsquarebrewery.com/index.php/our-beers"))
+    .search("#content")
+    .search("//h2")
+    .map{|e| e.inner_text}
 end
