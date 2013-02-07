@@ -44,14 +44,15 @@ def get_sunking_beers
   
   agent = Mechanize.new
   age_page = agent.get(url)
-  main_page = age_page.forms.first.submit(age_page.forms.first.submits[1])
-  ontap = main_page.search(".ontap")
-  
-  beers = ontap.text.split("\n")
-    .map{|s| s.strip}
-    .select{|s| s.length > 0}
+  ontap = age_page.search(".ontap").search(".textwidget")
+
+  puts ontap
+
+  beers = ontap.children
     .drop(2)
-    .map{|s| s.gsub('Seasonal Beer', '')}
+    .map{|c| c.text}
+    .reject{|x| x.empty?}
+    .reject{|c| c=="Seasonal Beer"}
 end
 
 def get_bier_beers
