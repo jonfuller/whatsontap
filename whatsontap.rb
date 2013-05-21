@@ -90,7 +90,7 @@ end
 def get_flat12_beers
   require 'hpricot'
   require 'open-uri'
-  Hpricot(open("http://flat12.me/blog/classification/ontap/feed/")).search("//item/title/")
+  Hpricot(open("http://flat12.me/classification/ontap/feed/")).search("//item/title/")
 end
 
 def get_triton_beers
